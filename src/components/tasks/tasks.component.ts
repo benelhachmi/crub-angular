@@ -1,5 +1,7 @@
 import { OnInit } from '@angular/core';
 import { Component} from '@angular/core';
+import { HttpErrorResponse } from "@angular/common/http";
+
 import { Subscriber } from 'rxjs';
 import { Task } from 'src/app/interface/task';
 
@@ -33,13 +35,23 @@ getTsks(){
    this.taskservice.findAll()
    .subscribe(task => this.resultTasks = this.tasks = task)
 }
-//supprimer de back-end et revoui les valeur qui ont différent de id
+
+//////////////////////////////////////////////////////////////////////////
+
+
+           //supprimer de back-end et revoui les valeur qui ont différent de id
 deletetask(id){
    this.taskservice.delete(id)
    .subscribe(()=>{
-      this.tasks =this.tasks.filter(e=>e !=id)
-   })
+    this.tasks =this.tasks.filter(e=>e !=id)
+  
+   },this.logError);
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
 //spred oper reader pour ajouter
 persisteTask(){
    this.taskservice.persist(this.myTask)
@@ -68,18 +80,27 @@ editTask(task){
 this.myTask = task;
 this.editForm =true
 }
+////////////////////////////////////////////////////////////////////////////
 
-//changer 
+
+                //changer 
 updateTask(){
    this.taskservice.update(this.myTask)
 .subscribe(e => {
 this.resetTask();
 this.editForm =false;
    })
-    }
+    } 
+
+
+    //////////////////////////////////////////////////////////////////////////
 //cherche dans data qui est locale
     serachTask(){
 this.resultTasks =this.tasks.filter((e) =>e.label.toLowerCase().includes(this.SerchText.toLowerCase()))
     }
+
+
+
+    logError = (error: HttpErrorResponse) => console.error(error);
 
    }
